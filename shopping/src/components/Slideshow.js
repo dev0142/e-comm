@@ -1,81 +1,170 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import Header from './Header'
-import '../components/slider/Slider.css'
-import BtnSlider from '../components/slider/BtnSlider'
-import dataSlider from '../components/slider/dataSlider'
 import styled from 'styled-components'
 import Logo from "../photos/svg_collections/logo.svg"
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'; 
+import NavBar from './NavBar';
 
-
-function Slideshow() {
-    const [slideIndex, setSlideIndex] = useState(1);
+    function Slideshow({images,autoPlay=true,autoPlayTime=70000}) {
+    const[currentSlide,setCurrentSlide]=useState(0);
 
     const nextSlide = () => {
-        if(slideIndex !== dataSlider.length){
-            setSlideIndex(slideIndex + 1)
-        } 
-        else if (slideIndex === dataSlider.length){
-            setSlideIndex(1)
+        if(currentSlide===images.length-1)
+        {
+            setCurrentSlide(0);
+        }
+        else{
+            setCurrentSlide(currentSlide+1);
         }
     }
 
     const prevSlide = () => {
-        if(slideIndex !== 1){
-            setSlideIndex(slideIndex - 1)
+        if(currentSlide===0)
+        {
+            setCurrentSlide(images.length-1);
         }
-        else if (slideIndex === 1){
-            setSlideIndex(dataSlider.length)
+        else{
+            setCurrentSlide(currentSlide-1);
         }
     }
 
-    const moveDot = index => {
-        setSlideIndex(index)
-    }
+    useEffect(() => {
+        const timer=setTimeout(()=>{
+            const newSlider=currentSlide>=images.length-1 ? 0 : (currentSlide+1);
+            setCurrentSlide(newSlider);
+        },autoPlayTime);
+        return () => {
+            clearTimeout(timer);
+        }
+    }, [currentSlide])
     return (
+        <>
+
         <MainContainer>
-            {dataSlider.map((obj, index) => {
-                return (
-                    <div
-                    key={obj.id}
-                    className={slideIndex === index + 1 ? "slide active-anim" : "slide"}
-                    >
-                        <img 
-                        src={process.env.PUBLIC_URL + `/Images/img${index + 1}.jpg`} 
-                        />
-                    </div>
-                )
-            })}
-            <BtnSlider moveSlide={nextSlide} direction={"next"} />
-            <BtnSlider moveSlide={prevSlide} direction={"prev"}/>
+        
+            {
+                images.map((image,index)=>{
+                    return(
+                    <Slider key={index}
 
-            <div className="container-dots">
-                {Array.from({length: 4}).map((item, index) => (
-                    <div 
-                    onClick={() => moveDot(index + 1)}
-                    className={slideIndex === index + 1 ? "dot active" : "dot"}
-                    ></div>
-                ))}
-            </div>
+                     style={{backgroundImage:`url(${image})`,marginLeft:index===0 ?` -${currentSlide*100}%`:undefined}}></Slider>
+                    )})
+            }
+            <NavigatorRight>
 
-            <HeaderContainer>
-                <HeaderLogo>
-                    <img src={Logo} alt="React Logo" />
-                </HeaderLogo>
-                <Header />  
-            </HeaderContainer>  
-            
+            <NavigateNextIcon onClick={nextSlide}  />
+                </NavigatorRight>
+            <NavigatorLeft>
 
+            <NavigateBeforeIcon onClick={prevSlide} />
+                </NavigatorLeft>
+        
+
+            <IndicatorWrapper>
+            {Array(images.length).fill(1).map((item, index) => {
+                    return(
+                        <Dots 
+                        isActive={currentSlide===index}  
+                        key={index}
+                        onClick={()=>setCurrentSlide(index)}
+                          ></Dots>
+                        )
+                    })}
+        </IndicatorWrapper>
+        <Header />
         </MainContainer>
+        {/* <HeaderContainer>
+        <HeaderLogo>
+            <img src={Logo} alt="React Logo" />
+        </HeaderLogo>
+        
+       
+    </HeaderContainer>  */}
+
+    </>
     )
 }
 
 export default Slideshow
 
+const IndicatorWrapper=styled.div`
+display:flex;
+flex-wrap:nowrap;
+position:absolute;
+bottom:15px;
+right:15px;
+`
+// const Gradient=styled.div`
+// position:absolute;
+// top:0;
+// bottom:0;
+// left:0;
+// right:0;
+// background-color:rgba(0,0,0,0.3);
+// `
+const NavigatorRight=styled.div`
+position:absolute;
+top:45%;
+right:15px;
+cursor:pointer;
+`
+const NavigatorLeft=styled.div`
+position:absolute;
+top:45%;
+left:15px;
+cursor:pointer;
+@media (max-width : 480px) {
+    fon-size:large;
+    }
+`
+const Dots=styled.div`
+width:12px;
+height:12px;
+background-color:white;
+opacity:${(props)=>(props.isActive ? 1:0.5)};
+margin:4px;
+transition: 750ms all ease-in-out;
+border-radius:20px;
+&:hover{
+    cursor:pointer; 
+}
+@media (max-width : 480px) {
+width:8px;
+height:8px;
+}
+`
 const MainContainer=styled.div`
 height:80vh;
-width:100%;
-
+display:flex;
+flex-wrap:nowrap;
 position:relative;
+overflow-x:hidden;
+@media (max-width : 480px) {
+   height:40vh;
+}
+`
+
+const Slider =styled.div`
+height:80vh;
+width:100%;
+transition: 750ms all ease-in-out;
+flex-shrink:0;
+background-position:center;
+background-size:cover;
+@media (max-width : 480px) {
+    height:50vh;
+    -webkit-background-size: 100%; 
+    -moz-background-size: 100%; 
+    -o-background-size: 100%; 
+    background-size: 100%; 
+    -webkit-background-size: cover; 
+    -moz-background-size: cover; 
+    -o-background-size: cover; 
+    background-size: cover;
+
+ }
+
 `
 const HeaderLogo=styled.div`
 position:absolute;
