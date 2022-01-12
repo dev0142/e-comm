@@ -1,3 +1,6 @@
+*{
+  scroll-behavior: smooth;
+}
 body {
     margin:0;
     padding: 0;
@@ -6,6 +9,19 @@ body {
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  body::-webkit-scrollbar {
+    width: 12px;               /* width of the entire scrollbar */
+  }
+  
+  body::-webkit-scrollbar-track {
+    background: black;        /* color of the tracking area */
+  }
+  
+  body::-webkit-scrollbar-thumb {
+    background-color: white;    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid black;  /* creates padding around scroll thumb */
   }
 
   
@@ -33,7 +49,7 @@ border:none;
   
     font-weight: bold;
     text-decoration: none;
-    margin: 12px;
+    padding: 12px;
     font-size:0.8rem;
     display:flex;
     align-items:center;
@@ -57,6 +73,7 @@ border:none;
     }
 
     .nav_link{
+    display: flex;
       font-size:0.72rem;
       -webkit-tap-highlight-color:transparent;
       transition:background-color 0.1s ease-in-out;
@@ -109,17 +126,12 @@ border:none;
     }
 
     .icon-button{
-      text-decoration: none;
-      border-radius: 10px;
       margin: 5px;
       padding: 5px;
-      position: relative;
-      text-align: center;
-      -webkit-user-select:none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
+    border-radius: 7px;
     }
+    
+    
     .whatsapp{
       color:#075E54 ;
     }
@@ -127,10 +139,13 @@ border:none;
       color: #4267B2;
     }
     .instgram{
-      color: #E1306C;
+      color: white;
     }
     .instagram:hover{
-      background-color: whitesmoke;
+      
+      background-color: #ffe6f7;
+      
+      
       color: #E1306C;
     }
     .whatsapp:hover{
@@ -235,15 +250,21 @@ border:none;
     .sep{
       display: flex;
       align-items: center;
-      margin:0 auto;
-      width: 70%;
-      height: 40px;
+ 
+      width: 90%;
+      height: 10px;
     }
-    
     .sep .line{
       flex: 1;
       height: 1px;
       background-color: rgb(236, 232, 232);
+    }
+    
+    
+    .sep .lineCart{
+      flex: 1;
+      height: 1px;
+      background-color: black;
     }
     
     .sep .text{
@@ -306,12 +327,463 @@ border:none;
     /* animation part */
     .fade-appear{
       opacity: 0;
+
     }
     .fade-appear-active{
       opacity: 1;
       
-      transition:opacity 450ms ease-in-out;
+      transition:opacity 100ms linear;
     }
     .fade-exit{
       opacity: 0;
     }
+
+    /* cart animation */
+    .slide-enter{
+      width: 0px;
+  
+    }
+    .slide-enter-done{
+      width: 400px;
+      transition:width 450ms linear;
+    }
+    .slide-exit{
+      width: 400px;
+    }
+
+
+    /* sticky header css */ 
+     .sticky {
+      position: fixed !important;
+      top: 0px !important;
+ 
+      background: rgba( 255, 255, 255) !important;
+      transition: top 300ms linear;
+    }
+     .stickysidebar{
+      position: fixed !important;
+      top: 35px !important;
+      transition: top 500ms ease-in-out;
+    }
+
+    .listingHeading{
+      font-size: 40px;
+      font-weight: 500;
+      color:#124281;
+      display: inline-block;
+      margin: 15px 0 15px 20px; 
+      font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    }
+    /* breadcrumbs css */
+    ul.breadcrumb {
+      border-radius: 5px;
+      padding: 8px 93px;
+      list-style: none;
+      margin: 0;
+      margin-left: 20px;
+    }
+    
+    /* Display list items side by side */
+    ul.breadcrumb li {
+      display: inline;
+      font-size: 14px;
+      font-family: sans-serif;
+    }
+    
+    /* Add a slash symbol (/) before/behind each list item */
+    ul.breadcrumb li+li:before {
+      padding: 8px;
+      color: black;
+      content: "/\00a0";
+    }
+    
+    /* Add a color to all links inside the list */
+    ul.breadcrumb li a {
+      color: #1859B0;
+      text-decoration: none;
+    }
+    
+    /* Add a color on mouse-over */
+    ul.breadcrumb li a:hover {
+      color: #01447e;
+      text-decoration: underline;
+    }
+
+
+
+
+
+
+    /* breadcrumbs for checkoutpage */
+
+
+
+
+    ul.breadcrumbCart {
+      border-radius: 5px;
+      
+      list-style: none;
+      display: flex;
+      align-items: center;
+      margin: 0;
+    
+      justify-content: space-evenly;
+    }
+    
+    /* Display list items side by side */
+    ul.breadcrumbCart li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+     width: 30%;
+     border-radius: 5px;
+     
+     color: whitesmoke;
+ background-color: #01447e;
+     position: relative;
+      height: 40px;
+      font-size: 17px;
+      font-family: sans-serif;
+    }
+    ul.breadcrumbCart li::after{
+      position: absolute;
+      right: 0;
+      content: "";
+      border-top: 20px solid #F6F7F8;
+border-left: 20px solid #01447e;
+border-bottom: 20px solid #F6F7F8;
+    }
+    
+    /* Add a slash symbol (/) before/behind each list item */
+    
+    
+    /* Add a color to all links inside the list */
+    ul.breadcrumbCart li a {
+      
+      color: #1859B0;
+      text-decoration: none;
+    }
+    
+    /* Add a color on mouse-over */
+    ul.breadcrumbCart li a:hover {
+      color: #01447e;
+      text-decoration: underline;
+    }
+
+
+    /* product quantity styling */
+    .quantity .input-text.qty {
+      width: 30px;
+      height: 25px;
+      
+      padding: 0 2px;
+      text-align: center;
+      
+      
+     }
+     .quantity{
+       height: 40px;
+       margin-top: 10px;
+       padding:0px 6px;
+       border-radius: 5px;
+       width: 88%;
+      display: flex;
+      background-color: #F8F8F8;
+      align-items: center;
+      justify-content: space-between;
+     }
+     
+     .quantity .buttons_added {
+      
+     width: 50%;
+      white-space: nowrap;
+      background-color: #F8F8F8;
+     }
+     
+     .quantity.buttons_added input {
+      margin: 0;
+      vertical-align: bottom;
+      box-shadow: none;
+      border: none;
+      background-color: #F8F8F8;
+      border-top-left-radius: 2px;
+     }
+     
+     .quantity.buttons_added .minus,
+     .quantity.buttons_added .plus {
+      color: #da9b71;
+      height: 25px;
+      font-size: large;
+      background-color: #F8F8F8;
+      border: none;
+      cursor:pointer;}
+     
+     .quantity.buttons_added .minus {
+      border-right: 0;
+    background-color: none; }
+     
+     .quantity.buttons_added .plus {
+      border-left: 0; }
+     
+     .quantity.buttons_added .minus:hover,
+     .quantity.buttons_added .plus:hover {
+      background-color: #673FD7;
+    color: white;}
+     
+     .quantity input::-webkit-outer-spin-button,
+     .quantity input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      margin: 0; }
+      
+      .quantity.buttons_added .minus:focus,
+     .quantity.buttons_added .plus:focus {
+      outline: none; }
+     
+   /* add to cart button styling   */
+   /* CSS */
+   
+   .button-37 {
+    position: relative;
+    background-image: linear-gradient(92.88deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+    border-radius: 8px;
+    margin-top: 20px;
+    border-style: none;
+    
+    color: #FFFFFF;
+    cursor: pointer;
+    
+    font-family: "Inter UI","SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    
+    height: 45px;
+    width: 90%;
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+    transition: all .5s;
+   
+  }
+   .button-36 {
+     position: relative;
+     background-image: linear-gradient(92.88deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+     
+     color: #FFFFFF;
+     cursor: pointer;
+     border-radius: 8px;
+     margin-top: 20px;
+     border-style: none;
+   
+     font-family: "Inter UI","SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif;
+     font-size: 18px;
+     font-weight: 500;
+     
+     height: 45px;
+     text-align: center;
+     width: 90%;
+     text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+     transition: all .5s;
+     
+     
+     
+    }
+    .button-36.animation{
+      color: white;
+      background: transparent;
+      
+    user-select: none;
+      cursor: default;
+      animation: hide 10ms 2200ms forwards;
+      
+    }
+  
+   .button-36::before{
+     content: "";
+     position:absolute;
+   display: none;
+   
+   border-radius: 8px;
+    inset: 0;
+    animation: effect 300ms;
+    animation-fill-mode: forwards;
+    background-image: linear-gradient(92.88deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+   }
+   
+
+   
+   .button-36.animation::after{
+    content: "";
+    position:absolute;
+  display: none;
+  left: 51%;
+  right: 51%;
+  top: 30%;
+  bottom: 30%;
+  border-radius: 8px;
+   animation:progess 800ms 300ms ;
+   background-color: #4723a9;
+   animation-iteration-count: 2;
+
+   }
+   .button-36.animation::before,.button-36.animation::after{
+    display: block;
+   }
+   .button-36-after {
+    position: relative;
+    background-image: linear-gradient(92.88deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+    display: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 20px;
+    border-style: none;  
+    font-family: "Inter UI","SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    
+    height: 45px;
+    width: 90%;
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+    transition: all  5s;
+    
+    
+    
+   }
+
+   /* .button-36-after.show{
+display: block;
+   } */
+   .isCartButt{
+     display: flex;
+     align-items: center;
+     justify-content: center;
+   }
+
+   @keyframes effect {
+     100%{
+      
+       top: 30%;
+       bottom: 30%;
+      
+     }
+   }
+   @keyframes progess {
+     100%{
+        left: 0%;
+        right: 0%;
+       
+      
+     }
+   }
+   /* @keyframes hide{
+     100%{
+      
+     
+      
+     }
+   }
+   @keyframes viewCartButton{
+     0%{
+      
+      
+     
+      
+     }
+   } */
+   
+   
+   @media (min-width: 768px) {
+     .button-36 {
+       padding: 0.7rem;
+     }
+   }
+
+   /* cart details */
+   .cartDetails{
+     width: 100%;
+     padding: 3px;
+     text-transform: capitalize;
+     margin-left: 5px;
+   }
+
+   .deleteItemFromCart{
+     position: absolute;
+     right: 0;
+   }
+
+
+   /* user profile button */
+   
+.button-28 {
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid #1A1A1A;
+  border-radius: 15px;
+  box-sizing: border-box;
+  color: #3B3B3B;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-size: 18px;
+  font-weight: 500;
+  line-height: normal;
+  margin: 0 auto;
+  min-height: 60px;
+  min-width: 0;
+  outline: none;
+  padding: 16px 24px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 80%;
+  will-change: transform;
+}
+
+.button-28:disabled {
+  pointer-events: none;
+}
+
+.button-28:hover {
+  color: #fff;
+  background-color: #1A1A1A;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+  transform: translateY(-2px);
+}
+
+.button-28:active {
+  box-shadow: none;
+  transform: translateY(0);
+}
+
+
+.outofstock{
+  position: absolute;
+  top:-15px;
+  left: 50%;
+  color: rgb(155, 5, 5);
+  transform: translateX(-50%);
+}
+.outofstockincart{
+  position: absolute;
+  top:-30px;
+
+  right: 20px;
+  font-size: 12px;
+  color: rgb(155, 5, 5);
+ 
+}
+
+
+
+
+
+
+
+   
+  
+
+   

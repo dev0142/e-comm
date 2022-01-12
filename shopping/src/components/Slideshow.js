@@ -72,7 +72,7 @@ import NavBar from './NavBar';
                         )
                     })}
         </IndicatorWrapper>
-        <Header />
+        
         </MainContainer>
         {/* <HeaderContainer>
         <HeaderLogo>
@@ -135,11 +135,16 @@ height:8px;
 }
 `
 const MainContainer=styled.div`
-height:80vh;
+height:60vh;
+width: 75%;
+border-radius:7px;
+margin:0px auto;
 display:flex;
 flex-wrap:nowrap;
 position:relative;
 overflow-x:hidden;
+overflow-y:hidden;
+z-index:1;
 @media (max-width : 480px) {
    height:40vh;
 }

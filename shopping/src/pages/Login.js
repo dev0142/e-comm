@@ -8,16 +8,18 @@ import GoogleIcon from '@mui/icons-material/Google';
 import loginImage from "../photos/loginImage.jpg"
 import {CSSTransition} from "react-transition-group"
 import { ToastContainer, toast } from 'react-toastify';
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from 'react-router'
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 // import api from "../api/users";
 import '../App.css'
+import { setAddressList } from '../redux/actions/productActions';
 
-function Login({openLoginModal,closeLoginModal,userData,setUserData}) {
+function Login({openLoginModal,closeLoginModal,userData,setUserData,setWishlistArray}) {
     const history=useHistory();
     // const notify = () => toast("Wow so easy!");
-
+    const dispatch = useDispatch();
     const[login,setLogin]=useState(false);
 
     //details for signing the user
@@ -33,19 +35,19 @@ function Login({openLoginModal,closeLoginModal,userData,setUserData}) {
 
     const handlePostData=(e)=>{
         e.preventDefault();
-        axios.post('/register', {
+        axios.post('http://localhost:3001/register', {
                 name:user.name,
                 email:user.email,
                 password:user.password
               }).then(res=>{
                 if(res.status===200)
                 {
-                    alert("user registered successfully");
+                    alert("User registered successfully");
               }
               }).catch(err=>{
                     if(err.response.status===404)
                     {
-                        alert("please fill all the details");
+                        alert("Please fill all the details");
                     }
                     else if(err.response.status===403)
                     {
@@ -61,11 +63,25 @@ function Login({openLoginModal,closeLoginModal,userData,setUserData}) {
         
             
     }
+    const wishlistData = async () => {
+        try {
+          const wishlistData = await axios.get(
+            "http://localhost:3001/getwishlist",
+            (axios.defaults.withCredentials = true)
+          );
+          setWishlistArray(wishlistData.data);
+          window.localStorage.setItem("wishlist", wishlistData.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
     const closeBothModal=()=>{
         closeLoginModal();
         setLogin(false);
     }
+
+    
 
     //login the user
     const[loginEmail,setLoginEmail]=useState("");
@@ -74,16 +90,19 @@ function Login({openLoginModal,closeLoginModal,userData,setUserData}) {
     const handleLogin=(e)=>{
         e.preventDefault();
         const loginDetails={email:loginEmail,password:loginPassword};
-        axios.post("/login",loginDetails,
+        axios.post("http://localhost:3001/login",loginDetails,
         
             axios.defaults.withCredentials = true
         ).then(res=>{
             if(res.status===200)
             {
+                
+                
                 setUserData(res.data);
+                wishlistData();
                 window.localStorage.setItem('user',JSON.stringify(res.data));
-                closeLoginModal();
-                history.push("/");
+                closeLoginModal();     
+                window.location.reload(false); 
             }
         }).catch(err=>{
             if(err.response.status===400)
@@ -236,6 +255,7 @@ top:0;
 bottom:0;
 right:0;
 left:0;
+z-index: 9999999;
 background: rgba( 255, 255, 255, 0.05 );
 box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
 backdrop-filter: blur( 5px );
@@ -257,7 +277,7 @@ padding:35px 15px;
 display:flex;
 align-items:center;
 border-radius:7px;
-z-index:1000;
+z-index:9999999;
 @media (max-width : 480px) {
     width:80%;
     height:65vh;

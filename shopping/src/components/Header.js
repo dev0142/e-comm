@@ -1,334 +1,548 @@
-import React,{useState,useEffect} from 'react'
-import "../App.css"
-import styled from 'styled-components'
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import { NavLink } from 'react-router-dom';
-import InstagramIcon from '@material-ui/icons/Instagram';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import WhatsAppIcon from '@material-ui/icons/WhatsApp';
-import HomeIcon from '@mui/icons-material/Home';
-import StoreIcon from '@mui/icons-material/Store';
-import MenuIcon from '@mui/icons-material/Menu';
-import PersonIcon from '@mui/icons-material/Person';
-import CategoryIcon from '@mui/icons-material/Category';
-import Herb from "../photos/herbs.png"
-import Drink from "../photos/drink.png"
-import Dry from "../photos/dry.png"
-import Seed from "../photos/seed.png"
-import Spices from "../photos/spices.png"
-import Veggie from "../photos/vegetable.png"
-import Wheat from "../photos/wheat.png"
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import Spread from "../photos/toast.png"
-import Login from '../pages/Login';
-import axios from 'axios'
+import React, { useState, useEffect, useRef } from "react";
+import "../App.css";
+import { useSelector, useDispatch } from "react-redux";
+import styled, { keyframes } from "styled-components";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import { NavLink } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
+import HomeIcon from "@mui/icons-material/Home";
+import StoreIcon from "@mui/icons-material/Store";
+import MenuIcon from "@mui/icons-material/Menu";
+import PersonIcon from "@mui/icons-material/Person";
+import CategoryIcon from "@mui/icons-material/Category";
+import Herb from "../photos/herbs.png";
+import Drink from "../photos/drink.png";
+import Dry from "../photos/dry.png";
+import { Link } from "react-router-dom";
+import Seed from "../photos/seed.png";
+import Spices from "../photos/spices.png";
+import Veggie from "../photos/vegetable.png";
+import Wheat from "../photos/wheat.png";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Spread from "../photos/toast.png";
+import Login from "../pages/Login";
+import axios from "axios";
+import logo from "../photos/logo.svg";
+import Cart from "./Cart";
+import {
+  deleteAllAddress,
+  deleteSelectedAddress,
+} from "../redux/actions/productActions";
 
-
-function DropDownMenu()
-{
-    return(
-        <>
-        <CategoryContainer>
+function DropDownMenu() {
+  return (
+    <>
+      <CategoryContainer>
+        {/* <div style={{minHeight:`20px`,backgroundColor:`transparent`}}></div> */}
         <MenuItems>
-        <img src={Herb} style={{width:`25px`,height:`25px`}} alt="herb image"/>
-        <a href="#">Herbs</a>
-         </MenuItems>
-         <MenuItems>
-        <img src={Spices} style={{width:`25px`,height:`25px`}} alt="herb image"/>
-        <a href="#">Species</a>
-         </MenuItems>
-         <MenuItems>
-        <img src={Drink} style={{width:`25px`,height:`25px`}} alt="herb image"/>
-        <a href="#">Healthy Drink</a>
-         </MenuItems>
-         <MenuItems>
-        <img src={Dry} style={{width:`25px`,height:`25px`}} alt="herb image"/>
-        <a href="#">Dry Fruits</a>
-         </MenuItems>
-         <MenuItems>
-        <img src={Wheat} style={{width:`25px`,height:`25px`}} alt="herb image"/>
-        <a href="#">Pulses</a>
-         </MenuItems>
-         <MenuItems>
-        <img src={Spread} style={{width:`25px`,height:`25px`}} alt="herb image"/>
-        <a href="#">Spreads</a>
-         </MenuItems>
-         <MenuItems>
-        <img src={Veggie} style={{width:`25px`,height:`25px`}} alt="herb image"/>
-        <a href="#">Fresh Items</a>
-         </MenuItems>
-         <MenuItems>
-        <img src={Seed} style={{width:`25px`,height:`25px`}} alt="herb image"/>
-        <a href="#">Seeds</a>
-         </MenuItems>
-        </CategoryContainer>
-        </>
-    )
+          <img
+            src={Herb}
+            style={{ width: `25px`, height: `25px` }}
+            alt="herb image"
+          />
+          <a href="#">Herbs</a>
+        </MenuItems>
+        <MenuItems>
+          <img
+            src={Spices}
+            style={{ width: `25px`, height: `25px` }}
+            alt="herb image"
+          />
+          <a href="#">Species</a>
+        </MenuItems>
+        <MenuItems>
+          <img
+            src={Drink}
+            style={{ width: `25px`, height: `25px` }}
+            alt="herb image"
+          />
+          <a href="#">Healthy Drink</a>
+        </MenuItems>
+        <MenuItems>
+          <img
+            src={Dry}
+            style={{ width: `25px`, height: `25px` }}
+            alt="herb image"
+          />
+          <a href="#">Dry Fruits</a>
+        </MenuItems>
+        <MenuItems>
+          <img
+            src={Wheat}
+            style={{ width: `25px`, height: `25px` }}
+            alt="herb image"
+          />
+          <a href="#">Pulses</a>
+        </MenuItems>
+        <MenuItems>
+          <img
+            src={Spread}
+            style={{ width: `25px`, height: `25px` }}
+            alt="herb image"
+          />
+          <a href="#">Spreads</a>
+        </MenuItems>
+        <MenuItems>
+          <img
+            src={Veggie}
+            style={{ width: `25px`, height: `25px` }}
+            alt="herb image"
+          />
+          <a href="#">Fresh Items</a>
+        </MenuItems>
+        <MenuItems>
+          <img
+            src={Seed}
+            style={{ width: `25px`, height: `25px` }}
+            alt="herb image"
+          />
+          <a href="#">Seeds</a>
+        </MenuItems>
+      </CategoryContainer>
+    </>
+  );
 }
-const MenuItems=styled.div`
-padding-left:5px;
-width:90%;
-display:flex;
-align-items:center;
-justify-content:center;
-&:hover{
+const MenuItems = styled.div`
+  padding-left: 5px;
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
     filter: brightness(1.2);
-}a{
-    font-size:1.2rem;
-    text-decoration:none;
-    color:black;
-    font-weight:500;
-    margin:0 auto;
-    width:90%;
-    margin:7px;
+  }
+  a {
+    font-size: 1.2rem;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    margin: 0 auto;
+    width: 90%;
+    margin: 7px;
+  }
+  @media (max-width: 480px) {
+    a {
+      font-size: 0.89rem;
+    }
+  }
+`;
+const enlarge = keyframes`
+100% {
+  height:320px;
+  
 }
-@media (max-width : 480px) {
-    a{
-        font-size:0.89rem;
-    }
-    }
-`
-const CategoryContainer=styled.div`
-width:200px;
-position:absolute;
-top:250px;
-left:51%;
-transform:translate(-50%,-50%);
-background: rgba( 255, 255, 255, 0.3 );
-box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-backdrop-filter: blur( 15px );
--webkit-backdrop-filter: blur( 15px );
-border-radius: 7px;
-border: 1px solid rgba( 255, 255, 255, 0.18 );
-display:flex;
-transition: height 5000ms ease-in-out;
-flex-wrap:nowrap;
-flex-direction:column;
+`;
+const CategoryContainer = styled.div`
+  width: 200px;
+  position: absolute;
+  top: 65px;
+  left: 50%;
+  height: 0px;
+  transform: translate(-50%);
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(11px);
+  -webkit-backdrop-filter: blur(11px);
+  border-radius: 7px;
+  display: flex;
+  z-index: 999999;
+  flex-wrap: nowrap;
+  animation: ${enlarge} 200ms linear forwards;
 
-@media (max-width : 480px) {
-    position:fixed;
-    top:initial;
-    bottom:-60px;
-    }
-`
-function ProfileMenu({setUserData,setOpenProfile})
-{
-    const handleSignOut=()=>{
-        axios.get("/logout",axios.defaults.withCredentials = true
-        ).then(res=>{
-            if(res.status===200)
-            {
-            window.localStorage.removeItem('user');
-            window.localStorage.clear();
-            setUserData(null);
-            setOpenProfile(false);
-            }
-        }).catch(err=>{
-            console.log(err);
-        })
-    }
-    return(
-        <>
-        <ProfileContainer>
+  flex-direction: column;
+
+  @media (max-width: 480px) {
+    position: fixed;
+    top: initial;
+    bottom: -60px;
+  }
+`;
+
+function ProfileMenu({ setWishlistArray, setUserData, setOpenProfile }) {
+  const dispatch = useDispatch();
+  const handleSignOut = () => {
+    axios
+      .get("/logout", (axios.defaults.withCredentials = true))
+      .then((res) => {
+        if (res.status === 200) {
+          window.localStorage.removeItem("user");
+          window.localStorage.removeItem("wishlist");
+          setWishlistArray(null);
+          setUserData(null);
+          dispatch(deleteAllAddress());
+          setOpenProfile(false);
+          window.location.reload(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  return (
+    <>
+      <ProfileContainer>
         <ProfileItems>
-        
-        <a href="#">My Account</a>
-         </ProfileItems>
-         <ProfileItems>
-        
-        <a href="#">Orders</a>
-         </ProfileItems>
-         <ProfileItems>
-
-        <NavLink onClick={handleSignOut} to="/">LogOut</NavLink>
-         </ProfileItems>
-        </ProfileContainer>
-        </>
-    )
+          <Link onClick={() => setOpenProfile(false)} to={"/account"}>
+            My Account
+          </Link>
+        </ProfileItems>
+        <ProfileItems>
+          <Link to={"/account"}>Orders</Link>
+        </ProfileItems>
+        <ProfileItems>
+          <NavLink onClick={handleSignOut} to="#">
+            LogOut
+          </NavLink>
+        </ProfileItems>
+      </ProfileContainer>
+    </>
+  );
 }
-const ProfileItems=styled.div`
-padding-left:5px;
-width:90%;
-display:flex;
-align-items:center;
-justify-content:center;
-a{
-    font-size:1rem;
-    text-decoration:none;
-    color:black;
-    font-weight:500;
-    margin:0 auto;
-    width:90%;
-    margin:7px;
-}
-@media (max-width : 480px) {
-    a{
-        font-size:0.89rem;
+const ProfileItems = styled.div`
+  padding-left: 5px;
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  a {
+    font-size: 1rem;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    margin: 0 auto;
+    width: 90%;
+    margin: 7px;
+  }
+  @media (max-width: 480px) {
+    a {
+      font-size: 0.89rem;
     }
-    }
-`
-const ProfileContainer=styled.div`
-width:170px;
-position:absolute;
-top:145px;
-left:76%;
-transform:translate(-50%,-50%);
-background: rgba( 255, 255, 255, 0.3 );
-box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-backdrop-filter: blur( 15px );
--webkit-backdrop-filter: blur( 15px );
-border-radius: 7px;
-border: 1px solid rgba( 255, 255, 255, 0.18 );
-display:flex;
-transition: height 5000ms ease-in-out;
-flex-wrap:nowrap;
-flex-direction:column;
+  }
+`;
+const ProfileContainer = styled.div`
+  width: 170px;
+  position: absolute;
+  top: 145px;
+  left: 76%;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  transition: height 5000ms ease-in-out;
+  flex-wrap: nowrap;
+  flex-direction: column;
 
-@media (max-width : 480px) {
-    position:fixed;
-    top:initial;
-    width:120px;
-    left:71%;
-    bottom:20px;
-    }
-`
+  @media (max-width: 480px) {
+    position: fixed;
+    top: initial;
+    width: 120px;
+    left: 71%;
+    bottom: 20px;
+  }
+`;
 
-function Header() {
+function Header({
+  setWishlistArray,
+  isOpen,
+  setIsOpen,
+  userdata,
+  setUserData,
+  cartCount,
+  cartOpen,
+  setCartCount,
+  setCartOpen,
+}) {
+  //const [cartCount,setCartCount]=useState(0);
+  const cartItems = useSelector((state) => state.allProducts.cart);
+  const navbar = useRef(null);
+  const [open, setOpen] = useState(false); //Categories
+  const userDetails = useSelector((state) => state.user.user);
 
-   const [userdata,setUserData]=useState(JSON.parse(localStorage.getItem('user')));
+  const [openProfile, setOpenProfile] = useState(false); //user profile
 
-   const[open,setOpen]=useState(false);     //Categories
-   const [isOpen, setIsOpen] = useState(false);  //login modal
-
-   const[openProfile,setOpenProfile]=useState(false);       //user profile
-
-   const handleChange=()=>{
+  const handleChange = () => {
     setOpenProfile(false);
     setOpen(!open);
-   }
-   const handleProfileChange=()=>{
+  };
+  const handleChangeForHover = () => {
+    setOpenProfile(false);
+    setOpen(true);
+  };
+  const handleProfileChange = () => {
     setOpen(false);
+    console.log("hi");
     setOpenProfile(!openProfile);
-   }
-   const handleOff=()=>{
-       setOpen(false);
-       setOpenProfile(false);
-   }
-   const handleLogin=()=>{
-       setIsOpen(true);
-       setOpen(false);
-   }
-    return (
-        <>
-    <MainHeader>
-        <LeftHeader>
-            <NavLink className="icon-button instagram" to="#"><InstagramIcon/></NavLink>
-            <NavLink className="icon-button facebook" to="#"><FacebookIcon/></NavLink>
-            <NavLink className="icon-button whatsapp" to="#"><WhatsAppIcon/></NavLink>
-        </LeftHeader>
-        <MiddleHeader>
-        <NavLink exact to="/" onClick={handleOff}  className="nav_link" activeClassName="active_navLink" >
-            <HomeIcon  />HOME
+  };
+  const handleOff = () => {
+    setOpen(false);
+    setOpenProfile(false);
+  };
+  const handleLogin = () => {
+    setIsOpen(true);
+    setOpen(false);
+  };
+  //cart open
+  // const[cartOpen,setCartOpen]=useState(false);
+  const handleCartState = () => {
+    setOpen(false);
+    setOpenProfile(false);
+    setCartOpen(true);
+  };
+  const closeCategoryBlock = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (navbar.current !== null) {
+        if (window.scrollY > 170) {
+          navbar.current.classList.add("sticky");
+        } else {
+          console.log("bye");
+          navbar.current.classList.remove("sticky");
+        }
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    let count = 0;
+    cartItems.forEach((item) => {
+      count += item.qty;
+    });
+    setCartCount(count);
+  }, [cartItems]);
+  return (
+    <>
+      <MainHeader ref={navbar}>
+        <LogoSection>
+          <img src={logo}></img>
+        </LogoSection>
+        <NavigationSection>
+          <span
+            style={{ margin: `0px`, padding: `5px 2px`, position: `relative` }}
+          >
+            <NavLink
+              exact
+              to="/"
+              onClick={handleOff}
+              className="nav_link"
+              activeClassName="active_navLink"
+            >
+              <div>
+                <HomeIcon />
+                <span>HOME</span>
+              </div>
             </NavLink>
-            <NavLink onClick={handleOff} activeClassName="active_navLink" className="nav_link"  to="/shop">
-            <StoreIcon />SHOP
+          </span>
+          <span
+            style={{ margin: `0px`, padding: `5px 2px`, position: `relative` }}
+          >
+            <NavLink
+              onClick={handleOff}
+              activeClassName="active_navLink"
+              className="nav_link"
+              exact
+              to="/product"
+            >
+              <div>
+                <StoreIcon />
+                <span>SHOP</span>
+              </div>
             </NavLink>
-           
-            <NavLink onClick={handleChange} activeClassName="active_navLink" className="nav_link" style={{margin:`7px`}} to="/categories">
-            <CategoryIcon />
-            <div style={{display:`flex`,alignItems:`center`, margin:`0px`,padding:`0px`}}>CATEGORIES
-            {
-                open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />
-            }
-            </div>
-            
+          </span>
+          <span
+            onClick={handleChange}
+            onMouseOver={handleChangeForHover}
+            onMouseLeave={closeCategoryBlock}
+            style={{ margin: `0px`, padding: `28px 2px`, position: `relative` }}
+          >
+            <NavLink
+              activeClassName="active_navLink"
+              className="nav_link"
+              style={{ margin: `0px` }}
+              to="#"
+            >
+              <div>
+                <CategoryIcon />
+
+                <span>CATEGORIES</span>
+                {open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+              </div>
             </NavLink>
-            <PartialActive>
-            <NavLink onClick={handleOff} activeClassName="active_navLink" className="nav_link" to="/why-us">WHY US?</NavLink>
-            </PartialActive>
-        </MiddleHeader>
+            {open ? <DropDownMenu /> : null}
+          </span>
+        </NavigationSection>
+        <SearchBar>
+          <SearchIcon />
+          <input type="text" placeholder="Search your favourite product" />
+        </SearchBar>
         <RightHeader>
-            {
-                !userdata ?
-        <NavLink onClick={handleLogin} activeClassName="active_navLink" className="nav_link1" to="/"><PersonIcon />SIGN IN</NavLink>
-        :
-        <NavLink onClick={handleProfileChange} activeClassName="active_navLink" className="nav_link1" to="/profile"><PersonIcon />{userdata.name.split(" ")[0]}</NavLink>
-
-            }
-        <NavLink onClick={handleOff} activeClassName="active_navLink" className="nav_link1" to="/cart"><ShoppingBagIcon />CART</NavLink>
+          {!userdata ? (
+            <NavLink
+              onClick={handleLogin}
+              activeClassName="active_navLink"
+              className="nav_link1"
+              to="#"
+            >
+              
+              <PersonIcon />
+              <span>
+                SIGN IN
+                </span>
+            </NavLink>
+          ) : (
+            <NavLink
+              onClick={handleProfileChange}
+              activeClassName="active_navLink"
+              className="nav_link1"
+              to="#"
+            >
+              <PersonIcon />
+              <span>
+                {userDetails.fname}
+                
+                </span>
+            </NavLink>
+          )}
+          <NavLink onClick={handleCartState} className="nav_link1" to="#">
+            <ShoppingBagIcon style={{ zIndex: `99999` }}></ShoppingBagIcon>
+            <span style={{ position: `relative` }}>
+              <span>CART</span>
+              {Object.keys(cartItems).length > 0 ? (
+                <CartCounter cartItems={cartItems}>
+                  <span>
+                    {Object.keys(cartItems).length === 0 ? "" : cartCount}
+                  </span>
+                </CartCounter>
+              ) : null}
+            </span>
+          </NavLink>
         </RightHeader>
-    </MainHeader>
-        {
-         open ? <DropDownMenu /> : null
-        }
-        
-        <Login userData={userdata} setUserData={setUserData} openLoginModal={isOpen} closeLoginModal={()=>{setIsOpen(false)}} >
-        </Login>
-        {
-         openProfile ? <ProfileMenu setUserData={setUserData}setOpenProfile={setOpenProfile} /> : null
-        }
-        
+      </MainHeader>
+
+      <Login
+        userData={userdata}
+        setUserData={setUserData}
+        openLoginModal={isOpen}
+        setWishlistArray={setWishlistArray}
+        closeLoginModal={() => {
+          setIsOpen(false);
+        }}
+      ></Login>
+      {openProfile ? (
+        <ProfileMenu
+          setWishlistArray={setWishlistArray}
+          setUserData={setUserData}
+          setOpenProfile={setOpenProfile}
+        />
+      ) : null}
+      <Cart
+        cartCount={cartCount}
+        cartOpen={cartOpen}
+        cartClose={() => setCartOpen(false)}
+      />
     </>
-    )
+  );
 }
 
-export default Header
+export default Header;
+
+const NavigationSection = styled.div`
+  display: flex;
+  padding: 0px 10px;
+  width: 27%;
+  align-items: center;
+  justify-content: space-between;
+  span {
+    font-size: 13.5px;
+    padding: 0px 2px;
+  }
+  div {
+    display: flex;
+    align-items: flex-end;
+  }
+`;
+
+const LogoSection = styled.div`
+  margin-top: 5px;
+  width: 18%;
+  z-index: 9999;
+
+  @media (max-width: 480px) {
+    display: none;
+  }
+`;
+const SearchBar = styled.div`
+  width: 35%;
+  padding: 8px;
+  border-radius: 7px;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 5px;
+    font-size: 15px;
+  }
+`;
+
+const RightHeader = styled.div`
+  display: flex;
+  align-items: center;
+  span{
+    font-size:13px;
+  }
+`;
+
+const CartCounter = styled.div`
+  padding: 5px;
+  height: 13px;
+  width: 12px;
+  background-color: #cccccc;
+
+  color: black;
+  border-radius: 50%;
+  position: absolute;
+  top: -32px;
+  right: -9px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const MainHeader = styled.div`
+  
+
+  height: 75px;
+  width: 90%;
+  margin: 0 auto;
+  z-index: 3;
+  display: flex;
+  align-items: center;
 
 
-const MiddleHeader =styled.div`
-display:flex;
-align-items:center;
-`
-const PartialActive=styled.div`
-@media (max-width : 480px) {
-    display:none;
-    }
-`
-const LeftHeader=styled.div`
-display:flex;
-width:12%;
-align-items:center;
-justify-content:space-evenly;
-padding-left:7px;
-@media (max-width : 480px) {
-    display:none;
-}
-`
 
-
-const RightHeader=styled.div`
-display:flex;
-align-items:center;
-`
-
-const MainHeader=styled.div`
-position:absolute;
-top:55px;
-left:50%;
-transform: translate(-50%, -50%);
-height:55px;
-width:70%;
-margin:0 auto;
-background: rgba( 255, 255, 255, 0.3 );
-box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-backdrop-filter: blur( 11px );
--webkit-backdrop-filter: blur( 11px );
-border-radius: 7px;
-border: 1px solid rgba( 255, 255, 255, 0.18 );
-display:flex;
-align-items:center;
-justify-content:space-between;
-@media (max-width : 480px) {
-    position:fixed;
-    top:initial;
-    bottom:-30px;
-    width:100%;
-    height:60px;
-    overflow-x:auto;
-    overflow-y:hidden;
-    justify-content:center;
-    
-    }
-`
-
+  
+  }
+  @media (max-width: 480px) {
+    position: fixed;
+    top: initial;
+    bottom: -30px;
+    width: 100%;
+    height: 60px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    justify-content: center;
+  }
+`;
