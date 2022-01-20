@@ -227,7 +227,12 @@ function Address({outOfStockChecker,setOutOfStockChecker}) {
           (axios.defaults.withCredentials = true)
         );
         if (res.status === 200) {
-          history.push("/order-success");
+          console.log(res.data.orderId);
+          
+          history.push({
+            pathname: '/order-success',
+            state: { orderId: res.data.orderId}
+        });
           dispatch(clearAllItemsInCart());
         }
       }
@@ -240,9 +245,7 @@ function Address({outOfStockChecker,setOutOfStockChecker}) {
     <>
       
         <Wow>
-          <div>
-            <div style={{ height: `110px` }}></div>
-          </div>
+         
           <Navigation>
             <div>
               <ul className="breadcrumbCart">
@@ -735,7 +738,8 @@ const Navigation = styled.div`
 
 const Wow = styled.body`
   background-color: #f6f7f8;
-  min-height: 80vh;
+  min-height: 82vh;
+  padding: 10px 0px;
 `;
 const AddContainer = styled.div`
   margin-top: 20px;

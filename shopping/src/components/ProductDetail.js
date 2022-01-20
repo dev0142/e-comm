@@ -146,9 +146,7 @@ const[selectedSize,setSelectedSize]=useState(30);
 
   return (
     <>
-    <div style={{height:`110px`}}>
-
-    </div>
+    
       <div>
         <ul className="breadcrumb">
           <li>

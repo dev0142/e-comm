@@ -7,6 +7,7 @@ import Slideshow from '../components/Slideshow';
 import Unique from '../components/Unique';
 
 function Home() {
+    
     return (
         <>
         <Slideshow images={[image1,image2,image3,image4]} />

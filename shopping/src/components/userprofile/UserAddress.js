@@ -531,4 +531,5 @@ const ListOfAddress = styled.div`
 
 const AddressContainer = styled.div`
   height: auto;
+  padding: 20px;
 `;

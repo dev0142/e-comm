@@ -1,23 +1,29 @@
 import axios from "axios"
 import { actionTypes } from "../constants/actionTypes"
 
+
 export const setProducts=()=> async(dispatch)=>{
-    const response=await axios.get("http://localhost:3003/fetch");
+    const response=await axios.get("http://localhost:3001/fetch");
     console.log(response.data);
     dispatch({
         type:actionTypes.SET_PRODUCTS,
         payload:response.data,
     });
+    return Promise.resolve();
 }
 
-export const updateProductQuantity=(itemId,updatedQuantity)=>{
-    return{
-        type:actionTypes.UPDATE_PRODUCT_QUANTITY,
-        payload:{
-            id:itemId,
-            updatedQuantity:updatedQuantity
-        }
-    }
+export const updateProductQuantity=(itemId,updatedQuantity)=>(dispatch)=>{
+    
+        return new Promise((resolve, reject) => {
+            dispatch({
+                type:actionTypes.UPDATE_PRODUCT_QUANTITY,
+                payload:{
+                    id:itemId,
+                    updatedQuantity:updatedQuantity
+                }});
+      
+            resolve();
+          });
 }
 export const loadCurrentItem=(itemId)=>{
     return{
@@ -113,7 +119,7 @@ export const adjustQty=(itemId,value)=>{
 }
 
 export const setCartList=()=> async(dispatch)=>{
-    const response=await axios.get("/getcartlist");
+    const response=await axios.get("http://localhost:3001/getcartlist");
     
     dispatch({type:actionTypes.SET_CART_ITEMS,
         payload:response.status===205 ? [] : response.data});
@@ -182,9 +188,25 @@ export const selectedAddress=(addId) =>async(dispatch)=>{
     
         const response=await axios.get("http://localhost:3001/orderdetails",
         (axios.defaults.withCredentials = true));
-        console.log(response.data);
+    
         dispatch({type:actionTypes.SET_ORDERS_LIST,
-            payload:response.data
+            payload:response.status===205 ? [] :response.data
             });
     
+    }
+    export const loadCurrentOrderDetails=(id)=> async(dispatch)=>{
+    
+        const response=await axios.get(`http://localhost:3001/orders/${id}`,
+        (axios.defaults.withCredentials = true));
+        console.log(response.data);
+        dispatch({type:actionTypes.LOAD_CURRENT_ORDER,
+            payload:response.status===404 ? [] :response.data
+            });
+    
+    }
+    export const removeCurrentOrderDetails=()=>{
+        return{
+            type:actionTypes.REMOVE_CURRENT_ORDER,
+            
+        }
     }

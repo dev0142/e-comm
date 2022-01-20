@@ -171,7 +171,7 @@ function Cart({ cartCount, cartOpen, cartClose }) {
           <h4>Rs. {orderTotal}</h4>
         </OrderSubtotal>
         <Link onClick={cartClose} to='/cart'>
-          <button style={{height:`39px`,marginTop:`5px`,fontSize:`15px`,width:`100%`}} className="button-36">Checkout</button></Link>
+          <button style={{height:`39px`,margin:`0px 0px`,fontSize:`15px`,width:`100%`}} className="button-36">Checkout</button></Link>
         </>
 }
       </CartContainer>
@@ -216,13 +216,14 @@ justify-content: center;
 
 const OrderSubtotal = styled.div`
   position: relative;
+  top: -10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 7px;
-  height: 30px;
+  height: 25px;
   background-color: #f8f8f8;
-  top: 0;
+  
 `;
 const InsideContainer = styled.div`
   height: 550px;
@@ -239,6 +240,7 @@ const CartContainer = styled.div`
   z-index: 999999;
   position: fixed;
   padding: 10px;
+  top: 0;
   right: 0;
   height: 100%;
   width: 370px;

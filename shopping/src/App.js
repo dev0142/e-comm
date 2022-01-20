@@ -22,6 +22,8 @@ import Account from "./components/Account";
 import StockChecker from "./components/StockChecker";
 import OrderSuccess from "./components/OrderSuccess";
 import TopBar from "./components/TopBar";
+import Footer from "./components/Footer";
+import OrderDetail from "./components/OrderDetail";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,7 +38,7 @@ function App() {
   const [wishlistArray, setWishlistArray] = useState(
     localStorage.getItem("wishlist")
   );
-  console.log(wishlistArray);
+ 
 
   const wishlistData = async () => {
     try {
@@ -55,17 +57,20 @@ function App() {
     }
   };
   useEffect(() => {
-    dispatch(setCartList());
-    dispatch(setProducts());
+    dispatch(setUserList());
+    dispatch(setProducts()).then(()=>{
+     
+      dispatch(setCartList());
+      dispatch(setOrdersList());
+    });
     // fetchProducts();
     wishlistData();
-    dispatch(setUserList());
-    dispatch(setOrdersList());
   }, []);
   return (
     <>
       <Router>
         <TopBar />
+        
         <Header
           userdata={userdata}
           setUserData={setUserData}
@@ -99,8 +104,10 @@ function App() {
           </Route>
           <Route path="/account">
             <Account
+              userdata={userdata}
               setWishlistArray={setWishlistArray}
               setUserData={setUserData}
+              setIsOpen={setIsOpen}
             />
           </Route>
           <Route path="/payment">
@@ -115,8 +122,13 @@ function App() {
           <Route path="/order-success">
             <OrderSuccess />
           </Route>
+          <Route path="/orders/:id">
+            <OrderDetail />
+          </Route>
         </Switch>
+        <Footer />
       </Router>
+
     </>
   );
 }

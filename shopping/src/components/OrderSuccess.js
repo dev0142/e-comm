@@ -1,15 +1,33 @@
 import React from 'react'
 import styled from 'styled-components'
 import placed from '../photos/orderconfirmed.jpg'
-
+import { useEffect,useState ,useRef} from "react";
+import { useLocation } from "react-router-dom";
 
 function OrderSuccess() {
+    const blast=useRef(null);
+    const [orderId,setOrderId]=useState(null);
+    const location = useLocation();
+
+    useEffect(() => {
+      
+        if(location.state)
+        {
+       setOrderId(location.state.orderId) ;
+        }
+        setTimeout(() => {
+            blast.current.classList.remove("pyro");
+            
+        }, 6000);
+    }, [location]);
+
+    if(orderId===null || orderId===undefined)
+    return(<>
+    <h1>I think you are lost</h1>
+    </>)
     return (
         <Container>
           
-            <div>
-            <div style={{ height: `110px` }}></div>
-          </div>
           
           <MainContainer>
               <OrderDetails>
@@ -18,7 +36,7 @@ function OrderSuccess() {
                   <div style={{height:`50px`}}>
 
                   </div>
-                  <p style={{fontWeight:`490`,fontSize:`19px`}}>#Order-No: 54879518</p>
+                  <p style={{fontWeight:`490`,fontSize:`19px`}}>#Order-No: {orderId}</p>
                   <p style={{fontWeight:`490`,fontSize:`19px`}}>Payment-mode: COD</p>
                   <p style={{fontWeight:`490`,fontSize:`19px`}}>Estimated-delivery:     5-6 days</p>
                 <button className='button-28'>View your Order</button>
@@ -29,7 +47,7 @@ function OrderSuccess() {
               </ImageContainer>
 
           </MainContainer>
-          <div className="pyro">
+          <div ref={blast} className="pyro">
     <div className="before"></div>
     <div className="after"></div>
 </div>

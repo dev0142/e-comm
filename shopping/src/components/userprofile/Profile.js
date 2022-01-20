@@ -9,6 +9,7 @@ import axios from 'axios';
 import { setUserList } from '../../redux/actions/productActions';
 
 function Profile() {
+    
     const dispatch=useDispatch();
    const userDetails = useSelector(state => state.user.user);
    
@@ -96,8 +97,8 @@ export default Profile
 const ProfileContainer=styled.div`
 
 width: 80%;
-margin:0 auto;
-height: 70vh;
+margin:20px auto;
+height: auto;
 div{
     position: relative;
     display: flex;

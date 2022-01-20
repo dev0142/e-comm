@@ -47,7 +47,7 @@ justify-content:space-between;
 padding:0px 25px;
 align-items:center;
 background-color:#FFF7E0;
-
+z-index:999999;
 `
 const SocialIcons=styled.div`
 display: flex;

@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const Order = require("./model/orders");
 
+
 const app = express();
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb" }));
@@ -222,6 +223,16 @@ app.post("/savetocart", authenticateToken, async (req, res) => {
     console.log(error.message);
   }
 });
+//fetching product Data
+app.get("/fetch",async(req,res)=>{
+  try {
+      
+      const allproduct=await ProductData.find({});
+      res.status(200).send(allproduct);
+  } catch (error) {
+      console.log(error);
+  }
+})
 
 //add address in user account
 app.post("/address", authenticateToken, (req, res) => {
@@ -394,6 +405,23 @@ app.post("/updateaddress", authenticateToken, async (req, res) => {
     res.status(200).send({ message: "address updated successfully" });
   }
 });
+//stock checking
+app.post("/stockchecker",async(req,res)=>{
+  try {
+    
+    const{productId}=req.body;
+    const prod=await ProductData.findOne({_id:productId});
+    console.log(prod.quantity);
+    if(prod)
+    {
+        res.status(200).send({quantity:prod.quantity});
+    }
+  
+  
+  } catch (error) {
+    console.log(error);
+  }
+  })
 
 //for placing order
 app.post("/order", authenticateToken, async(req, res) => {
@@ -539,7 +567,7 @@ const finalSave=await saveOrder.save();
         const updateQuantity=await ProductData.findOneAndUpdate({_id:item._id},
           {quantity:item.quantity-item.qty})})
           
-          res.status(200).json({message:"Order placed successfully"});
+          res.status(200).json({orderId:uniqueOrderNumber});
           
         }
     else{
@@ -581,6 +609,26 @@ app.get("/userdetails", authenticateToken, async(req, res) => {
     console.log(error);
 }
 });
+
+//fetching particular order details
+app.get("/orders/:id",async(req,res)=>{
+  try {
+    let orderId=req.params['id'];
+    console.log(orderId);
+    const details=await Order.findOne({orderid:orderId});
+    if(details)
+    {
+      res.status(200).send(details);
+    }
+    
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(404);
+  }
+})
+
+
+
 app.get("/orderdetails", authenticateToken, async(req, res) => {
   try {
     if(req.user===null)

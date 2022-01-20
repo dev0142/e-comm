@@ -11,6 +11,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import CategoryIcon from "@mui/icons-material/Category";
 import Herb from "../photos/herbs.png";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Drink from "../photos/drink.png";
 import Dry from "../photos/dry.png";
 import { Link } from "react-router-dom";
@@ -24,6 +25,7 @@ import Spread from "../photos/toast.png";
 import Login from "../pages/Login";
 import axios from "axios";
 import logo from "../photos/logo.svg";
+import EjectIcon from '@mui/icons-material/Eject';
 import Cart from "./Cart";
 import {
   deleteAllAddress,
@@ -109,6 +111,7 @@ const MenuItems = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 7px 7px 0px 7px;
   &:hover {
     filter: brightness(1.2);
   }
@@ -117,9 +120,8 @@ const MenuItems = styled.div`
     text-decoration: none;
     color: black;
     font-weight: 500;
-    margin: 0 auto;
     width: 90%;
-    margin: 7px;
+    margin: 7px 7px 0px 7px;
   }
   @media (max-width: 480px) {
     a {
@@ -129,7 +131,7 @@ const MenuItems = styled.div`
 `;
 const enlarge = keyframes`
 100% {
-  height:320px;
+  height:330px;
   
 }
 `;
@@ -140,15 +142,14 @@ const CategoryContainer = styled.div`
   left: 50%;
   height: 0px;
   transform: translate(-50%);
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(252, 252, 252);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(11px);
-  -webkit-backdrop-filter: blur(11px);
+
   border-radius: 7px;
   display: flex;
   z-index: 999999;
   flex-wrap: nowrap;
-  animation: ${enlarge} 200ms linear forwards;
+  animation: ${enlarge} 300ms ease-in-out forwards;
 
   flex-direction: column;
 
@@ -195,6 +196,7 @@ function ProfileMenu({ setWishlistArray, setUserData, setOpenProfile }) {
             LogOut
           </NavLink>
         </ProfileItems>
+        <EjectIcon style={{color:`white`,position:`absolute`,top:`-16px`,left:`50%`,transform:`translate(-50%)`}} />
       </ProfileContainer>
     </>
   );
@@ -223,11 +225,11 @@ const ProfileItems = styled.div`
 const ProfileContainer = styled.div`
   width: 170px;
   position: absolute;
-  top: 145px;
-  left: 76%;
+  top: 90px;
+  left: 50%;
   z-index: 99999;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%);
+  background: rgba(251, 251, 251);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
@@ -276,8 +278,17 @@ function Header({
   };
   const handleProfileChange = () => {
     setOpen(false);
-    console.log("hi");
+
     setOpenProfile(!openProfile);
+  };
+  const handleProfileChangeOnHover = () => {
+    setOpen(false);
+    setOpenProfile(true);
+  };
+  const closeProfileBlock = () => {
+    setOpen(false);
+
+    setOpenProfile(false);
   };
   const handleOff = () => {
     setOpen(false);
@@ -301,10 +312,10 @@ function Header({
   useEffect(() => {
     window.addEventListener("scroll", () => {
       if (navbar.current !== null) {
-        if (window.scrollY > 170) {
+        if (window.scrollY > 200  && document.body.scrollHeight>1000) {
           navbar.current.classList.add("sticky");
         } else {
-          console.log("bye");
+          
           navbar.current.classList.remove("sticky");
         }
       }
@@ -322,11 +333,15 @@ function Header({
     <>
       <MainHeader ref={navbar}>
         <LogoSection>
-          <img src={logo}></img>
+          <img height={130} src={logo}></img>
         </LogoSection>
         <NavigationSection>
           <span
-            style={{ margin: `0px`, padding: `5px 2px`, position: `relative` }}
+            style={{
+              margin: `0px 5px`,
+              padding: `5px 2px`,
+              position: `relative`,
+            }}
           >
             <NavLink
               exact
@@ -342,7 +357,11 @@ function Header({
             </NavLink>
           </span>
           <span
-            style={{ margin: `0px`, padding: `5px 2px`, position: `relative` }}
+            style={{
+              margin: `0px 5px`,
+              padding: `5px 2px`,
+              position: `relative`,
+            }}
           >
             <NavLink
               onClick={handleOff}
@@ -361,7 +380,11 @@ function Header({
             onClick={handleChange}
             onMouseOver={handleChangeForHover}
             onMouseLeave={closeCategoryBlock}
-            style={{ margin: `0px`, padding: `28px 2px`, position: `relative` }}
+            style={{
+              margin: `0px 5px`,
+              padding: `28px 2px`,
+              position: `relative`,
+            }}
           >
             <NavLink
               activeClassName="active_navLink"
@@ -391,25 +414,45 @@ function Header({
               className="nav_link1"
               to="#"
             >
-              
               <PersonIcon />
-              <span>
-                SIGN IN
-                </span>
+              <span>SIGN IN</span>
             </NavLink>
           ) : (
-            <NavLink
-              onClick={handleProfileChange}
-              activeClassName="active_navLink"
-              className="nav_link1"
-              to="#"
-            >
-              <PersonIcon />
-              <span>
-                {userDetails.fname}
-                
-                </span>
-            </NavLink>
+            <>
+              <span
+                onClick={handleProfileChange}
+                onMouseOver={handleProfileChangeOnHover}
+                onMouseLeave={closeProfileBlock}
+                style={{
+                  margin: `0px 5px`,
+                  padding: `35px 0px`,
+                  position: `relative`,
+                }}
+              >
+                <NavLink
+                  activeClassName="active_navLink"
+                  className="nav_link1"
+                  to="#"
+                >
+                 
+
+                  <PersonIcon />
+                  <span>{userDetails.fname}</span>
+
+                </NavLink>
+                  {openProfile ? (
+        <ProfileMenu
+          setWishlistArray={setWishlistArray}
+          setUserData={setUserData}
+          setOpenProfile={setOpenProfile}
+        />
+      ) : null}
+              </span>
+              <NavLink className="nav_link1" to="#">
+                <FavoriteBorderIcon />
+                <span>WishList</span>
+              </NavLink>
+            </>
           )}
           <NavLink onClick={handleCartState} className="nav_link1" to="#">
             <ShoppingBagIcon style={{ zIndex: `99999` }}></ShoppingBagIcon>
@@ -436,13 +479,7 @@ function Header({
           setIsOpen(false);
         }}
       ></Login>
-      {openProfile ? (
-        <ProfileMenu
-          setWishlistArray={setWishlistArray}
-          setUserData={setUserData}
-          setOpenProfile={setOpenProfile}
-        />
-      ) : null}
+      
       <Cart
         cartCount={cartCount}
         cartOpen={cartOpen}
@@ -456,10 +493,12 @@ export default Header;
 
 const NavigationSection = styled.div`
   display: flex;
+
   padding: 0px 10px;
   width: 27%;
+  height: 100%;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   span {
     font-size: 13.5px;
     padding: 0px 2px;
@@ -471,20 +510,27 @@ const NavigationSection = styled.div`
 `;
 
 const LogoSection = styled.div`
-  margin-top: 5px;
-  width: 18%;
+  width: 10%;
+  position: relative;
+  height: 100%;
   z-index: 9999;
 
+  img {
+    position: absolute;
+    top: -21px;
+    left: 20px;
+  }
   @media (max-width: 480px) {
     display: none;
   }
 `;
 const SearchBar = styled.div`
-  width: 35%;
+  width: 36%;
   padding: 8px;
   border-radius: 7px;
   background-color: #f5f5f5;
   display: flex;
+
   align-items: center;
   input {
     width: 100%;
@@ -498,9 +544,11 @@ const SearchBar = styled.div`
 
 const RightHeader = styled.div`
   display: flex;
+  width: 17%;
   align-items: center;
-  span{
-    font-size:13px;
+justify-content:center;
+  span {
+    font-size: 13px;
   }
 `;
 
@@ -523,14 +571,15 @@ const CartCounter = styled.div`
 
 const MainHeader = styled.div`
   
-
+  
   height: 75px;
-  width: 90%;
-  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+ margin: 0px;
+ padding: 0px 20px;
   z-index: 3;
   display: flex;
   align-items: center;
-
 
 
   

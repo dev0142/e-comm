@@ -11,6 +11,7 @@ const userState = {
   address: [],
   orders:[],
   selected_address: {},
+  selected_order:{}
 };
 export const productReducer = (state = initialState, { type, payload }) => {
   switch (type) {
@@ -199,6 +200,18 @@ export const userReducer = (state = userState, { type, payload }) => {
         return {
           ...state,
           orders:payload,
+        };
+      case actionTypes.LOAD_CURRENT_ORDER:
+
+        return {
+          ...state,
+          selected_order:payload,
+        };
+      case actionTypes.REMOVE_CURRENT_ORDER:
+
+        return {
+          ...state,
+          selected_order:[],
         };
 
     default:
