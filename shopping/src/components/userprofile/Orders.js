@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect, useRef} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import styled from "styled-components";
@@ -6,23 +6,39 @@ import accept from "../../photos/accept.png";
 import shipped from "../../photos/fast-delivery.png";
 import delivery from "../../photos/delivery.png";
 import delivered from "../../photos/delivered.png";
+import { setOrdersList } from "../../redux/actions/productActions";
 
 function Orders() {
   const history = useHistory();
+  const dispatch=useDispatch();
+  const status=useRef(null);
   const ordersList = useSelector((state) => state.user.orders);
   const productList = useSelector((state) => state.allProducts.products);
   const urlPath = window.location.href.split("/");
-  console.log(urlPath[urlPath.length - 1]);
+  
 
   const showOrderDetails = (id) => {
     history.push(`/orders/${id}`);
   };
 
+  useEffect(() => {
+   dispatch(setOrdersList())
+  }, []);
+  
+
   return (
     <>
       {ordersList.map((item, index) => {
+        
+        if(index===1)
+        {
+          console.log("i am running");
+          console.log(status.current);
+         
+        }
+        
         return (
-          <OrdersContainer key={index}>
+          <OrdersContainer key={index} index={index}>
             <div
               style={{
                 display: `flex`,
@@ -36,15 +52,16 @@ function Orders() {
             <OrderTracker>
               <div className="orderline-cont">
                 <div className="info">Ordered</div>
-                <div className="request-loader">
+                <div className={item.orderStatus==="processing" ? "request-loader" : "before-request-loader"}>
                   <img src={accept} width="40px" height="40px"></img>
                 </div>
                 <div className="info">{item.orderDate}</div>
+              
               </div>
-              <div className="before-orderline"></div>
+              <div ref={status} className={item.orderStatus==="shipped" || item.orderStatus==="out" || item.orderStatus==="delivered" ? 'orderline' : 'before-orderline'}></div>
               <div className="orderline-cont">
                 <div className="info">Shipped</div>
-                <div className="before-request-loader">
+                <div className={item.orderStatus==="shipped" ? 'request-loader':"before-request-loader"}>
                   <img src={shipped} width="45px" height="45px"></img>
                 </div>
                 <div className="info">
@@ -52,21 +69,21 @@ function Orders() {
                 </div>
               </div>
 
-              <div className="before-orderline"></div>
+              <div className={ item.orderStatus==="out" || item.orderStatus==="delivered" ? 'orderline' : 'before-orderline'}></div>
               <div className="orderline-cont">
                 <div className="info">Out for Delivery</div>
-                <div className="before-request-loader">
+                <div className={item.orderStatus==="out" ? 'request-loader':"before-request-loader"}>
                   <img src={delivery} width="45px" height="45px"></img>
                 </div>
                 <div className="info">
                   <span></span>
                 </div>
               </div>
-              <div className="before-orderline"></div>
+              <div className={item.orderStatus==="delivered" ? 'orderline' : 'before-orderline'}></div>
 
               <div className="orderline-cont">
                 <div className="info">Delivered</div>
-                <div className="before-request-loader">
+                <div className={ item.orderStatus==="delivered" ? 'before-request-loader':"before-request-loader"}>
                   <img src={delivered} width="45px" height="45px"></img>
                 </div>
                 <div className="info">
@@ -78,7 +95,7 @@ function Orders() {
               const productStatus = productList.find(
                 (prod) => prod._id === product.productid
               );
-              console.log(productStatus);
+             
               const diff =
                 (product.productprice * product.productdiscount) / 100;
               const originalPrice = Math.round(product.productprice - diff);

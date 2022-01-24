@@ -3,6 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
+import accept from "../photos/accept.png";
+import shipped from "../photos/fast-delivery.png";
+import delivery from "../photos/delivery.png";
+import delivered from "../photos/delivered.png";
 import {
   loadCurrentOrderDetails,
   removeCurrentOrderDetails,
@@ -89,6 +93,9 @@ function OrderDetail() {
 
         </AddressSection>
 <PriceSection>
+<h3 style={{ margin: `0px 0px 10px 0px`, fontWeight: `500` }}>
+                               Payment Summary
+                              </h3>
 <span
                   style={{
                     display: `flex`,
@@ -166,13 +173,56 @@ function OrderDetail() {
 
 </PriceSection>
 <OtherSection>
-    <h3>Payment method</h3>
+<h3 style={{ margin: `0px`, fontWeight: `500` }}>
+                               Payment method
+                              </h3>
     <p>Razorpay or COD</p>
 
 </OtherSection>
     </OrderSummary>
       <OrderDetails>
       <h3 style={{fontWeight:`600`}}>Items({order.items.length})</h3>
+      <OrderTracker>
+              <div className="orderline-cont">
+                <div className="info">Ordered</div>
+                <div className="request-loader">
+                  <img src={accept} width="40px" height="40px"></img>
+                </div>
+                <div className="info">on    {order.orderDate}</div>
+              </div>
+              <div className="before-orderline"></div>
+              <div className="orderline-cont">
+                <div className="info">Shipped</div>
+                <div className="before-request-loader">
+                  <img src={shipped} width="45px" height="45px"></img>
+                </div>
+                <div className="info">
+                  <span></span>
+                </div>
+              </div>
+
+              <div className="before-orderline"></div>
+              <div className="orderline-cont">
+                <div className="info">Out for Delivery</div>
+                <div className="before-request-loader">
+                  <img src={delivery} width="45px" height="45px"></img>
+                </div>
+                <div className="info">
+                  <span></span>
+                </div>
+              </div>
+              <div className="before-orderline"></div>
+
+              <div className="orderline-cont">
+                <div className="info">Delivered</div>
+                <div className="before-request-loader">
+                  <img src={delivered} width="45px" height="45px"></img>
+                </div>
+                <div className="info">
+                  <span></span>
+                </div>
+              </div>
+            </OrderTracker>
           {
             order.items.map((product, index) => {
             const productStatus = productList.find(
@@ -281,10 +331,18 @@ const MainContainer = styled.div`
   width: 70%;
   height: 100vh;
 `;
-
+const OrderTracker = styled.div`
+  display: flex;
+  width: 100%;
+  
+  align-items: start;
+  justify-content: center;
+  margin: 30px 0px;
+`;
 const OrderDetails = styled.div`
 margin: 10px auto;
-width: 70%;
+width: 80%;
+
 
 `;
 const OrderSummary=styled.div`
@@ -295,8 +353,8 @@ border: 1px solid #E7E7E7;
 
 const AddressSection=styled.div`
 width: 33%;
-  margin: 10px 20px 10px 0px;
-  padding: 20px 10px 10px 10px;
+  margin: 10px;
+  padding: 10px;
   height: auto;
   background-color: white;
   
@@ -312,15 +370,15 @@ width: 33%;
 const PriceSection=styled.div`
 
 width: 30%;
-  text-align: right;
-  margin: 25px 10px 10px 10px;
+  
+  margin: 10px;
   padding: 10px;
   border-right:1px solid #E7E7E7;
 `
 const OtherSection=styled.div`
 width: 30%;
-
-margin: 25px 5px 5px 10px;
+margin: 10px;
+  padding: 10px;
 `
 
 const OrderItems = styled.div`

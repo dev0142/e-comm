@@ -51,6 +51,11 @@ app.use(
   })
 );
 
+var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+var months={
+  '01':'Jan','02':'Feb','03':'Mar','04':'Apr','05':'May','06':'Jun','07':'July','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec'};
+
+  
 //registering the user
 app.post("/register", (req, res) => {
   const { email, name, password } = req.body;
@@ -539,7 +544,9 @@ const finalSave=await saveOrder.save();
     if (mm < 10) {
         mm = '0' + mm;
     }
- var myDate= dd + '-' + mm + '-' + yyyy;
+
+ var myDate= days[today.getDay()]+","+" "+dd+" "+months[mm]+" "+yyyy;
+ console.log(myDate);
 const saveOrder=await new Order({
     userId:email,
     userType:"Registered",

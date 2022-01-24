@@ -3,7 +3,7 @@ import "../App.css";
 import { useSelector, useDispatch } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
 import StoreIcon from "@mui/icons-material/Store";
@@ -259,14 +259,21 @@ function Header({
   cartOpen,
   setCartCount,
   setCartOpen,
+  searchTerm,
+  setSearchTerm
 }) {
   //const [cartCount,setCartCount]=useState(0);
   const cartItems = useSelector((state) => state.allProducts.cart);
+  const history=useHistory();
   const navbar = useRef(null);
+  useOutsideAlerter(navbar);
+  const searchEl=useRef("");
   const [open, setOpen] = useState(false); //Categories
   const userDetails = useSelector((state) => state.user.user);
 
   const [openProfile, setOpenProfile] = useState(false); //user profile
+  const[suggestions,setSuggestions]=useState([]); //suggestions block
+  const[openSugg,setOpenSugg]=useState(false); //suggestions block opener
 
   const handleChange = () => {
     setOpenProfile(false);
@@ -329,6 +336,82 @@ function Header({
     });
     setCartCount(count);
   }, [cartItems]);
+  const allProducts=useSelector(state=>state.allProducts.products);
+  
+  function useOutsideAlerter(ref) {
+    useEffect(() => {
+        /**
+         * Alert if clicked on outside of element
+         */
+        function handleClickOutside(event) {
+            if (ref.current && !ref.current.contains(event.target)) {
+                setOpenSugg(false);
+            }
+        }
+
+        // Bind the event listener
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            // Unbind the event listener on clean up
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [ref]);
+}
+  const headerSearchResults=()=>{
+    let newSearchResult=[];
+    if(searchTerm!=="" && searchEl.current.value!=="")
+    {
+      newSearchResult=allProducts.filter(product=>{
+        
+        let toBeSearched=Object.values(product).slice(0,5);
+        let  exp1=toBeSearched.join(" ");
+        let finalexp="";
+        for(let i=0;i<exp1.length;i++)
+        {
+          if(exp1.charAt(i)!==" ")
+          {
+            finalexp+=exp1.charAt(i);
+          }
+        }
+        setOpenSugg(true);
+        return finalexp.toLowerCase().includes(searchTerm.toLowerCase());
+
+        // const regex=new RegExp(`${searchTerm}`,"g");
+        // return product.match(regex)
+      })
+
+      
+    }
+    setSuggestions(newSearchResult);
+  }
+
+  const handleSearchChange=()=>{
+    
+    setSearchTerm(searchEl.current.value);
+    
+  }
+
+  useEffect(()=>{
+        headerSearchResults();
+
+  },[searchTerm])
+  const handleEnterKeyEvent=(event)=>{
+    
+      if(event.key === 'Enter'){
+        history.push(`/search/${searchTerm}`)
+        setOpenSugg(false);
+      }
+    
+  }
+  const destoryTheSuggestion=(setTheTerm)=>{
+    setOpenSugg(false);
+    setSearchTerm(setTheTerm);
+  }
+  const openTheSuggestion=(setTheTerm)=>{
+    setOpenSugg(true);
+    
+  }
+
   return (
     <>
       <MainHeader ref={navbar}>
@@ -404,7 +487,31 @@ function Header({
         </NavigationSection>
         <SearchBar>
           <SearchIcon />
-          <input type="text" placeholder="Search your favourite product" />
+          <input onClick={openTheSuggestion} onKeyPress={handleEnterKeyEvent} ref={searchEl} type="text" placeholder="Search your favourite product" value={searchTerm} onChange={handleSearchChange} />
+          {
+            suggestions.length!==0 && openSugg ?
+          <SuggestionBox >
+{
+  suggestions && suggestions.map((prod)=>{
+    return(
+      <>
+      <Link onClick={()=>destoryTheSuggestion(prod.name)} style={{textDecoration:`none`,color:`black`}} to={`/search/${prod.name}`}>
+      <div>
+        <SearchIcon style={{marginTop:`5px`,fontSize:`18px`}} />
+        <p>
+        {prod.name}
+        </p>
+        
+        </div>
+        </Link>
+      </>
+    )
+  })
+}
+          </SuggestionBox>
+          :
+          null
+}
         </SearchBar>
         <RightHeader>
           {!userdata ? (
@@ -527,6 +634,7 @@ const LogoSection = styled.div`
 const SearchBar = styled.div`
   width: 36%;
   padding: 8px;
+  position: relative;
   border-radius: 7px;
   background-color: #f5f5f5;
   display: flex;
@@ -541,6 +649,40 @@ const SearchBar = styled.div`
     font-size: 15px;
   }
 `;
+const dropit=keyframes`
+from{
+transform: translateY(-200%);
+}
+to{
+  transform: translateY(0%);
+}
+
+`;
+const SuggestionBox=styled.div`
+position: absolute;
+top:55px;
+left:-5px;
+background: #F5F5F5;
+padding: 10px;
+border-radius:7px;
+box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+animation: ${dropit} 0.3s;
+
+width:98%;
+height: auto;
+div{
+  padding: 5px;
+  display: flex;
+  align-items:center;
+  justify-content:flex-start;
+  
+  p{
+    margin:7px;
+    font-size:14px;
+  }
+}
+
+`
 
 const RightHeader = styled.div`
   display: flex;
